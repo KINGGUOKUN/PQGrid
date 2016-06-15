@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <meta charset="utf-8" />
+    <link href="../Content/themes/base/theme.css" rel="stylesheet" />
+    <!--<link href="../Content/themes/base/style.css" rel="stylesheet" />-->
+    <link href="../scripts/pqGrid/pqgrid.dev.css" rel="stylesheet" />
+    <link href="../scripts/pqGrid/themes/Office/pqgrid.css" rel="stylesheet" />
+    <script src="../scripts/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="../scripts/jQuery/jquery-ui-1.11.4.min.js"></script>
+    <script src="../scripts/pqGrid/pqgrid.dev.js" charset="utf-8"></script>
+    <script src="../scripts/pqGrid/localize/pq-localize-zh.js"></script>
+    <script>
+        $(function () {
+            $.extend($.paramquery.pqGrid.prototype.options, $.paramquery.pqGrid.regional['zh']);
+            $.extend($.paramquery.pqPager.prototype.options, $.paramquery.pqPager.regional['zh']);
+
+            var pqOptions = {
+                editable: false,
+                freezeCols: 2,
+                width: window.innerWidth - 30,
+                height: window.innerHeight - 30,
+                title: "客户管理"
+            };
+
+            pqOptions.colModel = [
+                { title: "编号", dataIndx: "ID", dataType: "string", width: 200, align: "center" },
+                { title: "手机号", dataIndx: "Mobile", dataType: "string", width: 200, align: "center" },
+                { title: "邀请码", dataIndx: "InviteCode", dataType: "string", width: 200, align: "center" },
+                { title: "邀请总数", dataIndx: "InvitingTotal", dataType: "integer", width: 200, align: "center" }
+            ];
+
+            pqOptions.dataModel = {
+                location: "remote",
+                dataType: "JSON",
+                method: "GET",
+                //getUrl: function () {
+                //    return {
+                //        url: "/api/clients/page",
+                //        data: { pageIndex: 1, pageSize: 10 }
+                //    };
+                //},
+                url: "/api/clients/page",
+                getData: function (data, status, xhr) {
+                    return { curPage: data.pageIndex, totalRecords: data.count, data: data.data };
+                }
+            };
+
+            //pqOptions.detailModel = {
+            //    cache: false,
+            //    init: function (ui) {
+            //        var rd = ui.rowData;
+            //        return $('<span style="color:red">红色详情</span>');
+            //    }
+            //};
+
+            pqOptions.pageModel = {
+                type: "remote",
+                //curPage: 1,
+                rPP: 10,
+                strRpp: "{0}"
+                //rPPOptions: [10, 20, 50, 100]
+            };
+
+            $("#pgGrid").pqGrid(pqOptions);
+        });
+    </script>
+</head>
+<body>
+    <div id="pgGrid"></div>
+</body>
+</html>
